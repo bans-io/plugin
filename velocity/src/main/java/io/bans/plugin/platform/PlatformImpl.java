@@ -2,6 +2,7 @@ package io.bans.plugin.platform;
 
 import com.velocitypowered.api.proxy.ProxyServer;
 import io.bans.platform.Platform;
+import io.bans.platform.PlatformConfiguration;
 import io.bans.platform.PlatformLogLevel;
 import io.bans.platform.PlatformType;
 import io.bans.plugin.BansPlugin;
@@ -53,5 +54,10 @@ public class PlatformImpl implements Platform {
             case ERROR:
                 logger.severe(message);
         }
+    }
+
+    @Override
+    public PlatformConfiguration getConfiguration() {
+        return null;
     }
 }

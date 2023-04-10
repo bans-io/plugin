@@ -1,0 +1,14 @@
+# Bans Configuration (Bukkit) - https://bans.io
+# Visit https://docs.bans.io for assistance.
+
+# Configuration version (do not modify)
+config_version: 1
+
+# Unique server key for this server
+# Locate the key in the dashboard under server settings.
+server_key: "your_server_key_here"
+
+# Discord key for this server
+# To obtain the key, invite our bot to your Discord server and type /key (admin privileges required).
+# The bot will log events, such as punishments and appeals, in the server's designated channel.
+discord_key: "your_discord_key_here"

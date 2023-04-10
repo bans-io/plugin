@@ -1,8 +1,11 @@
 # Configuration for Bans.io Velocity - https://bans.io
 # For assistance, visit https://docs.bans.io.
 
+# Configuration version (do not modify)
+config_version: 1
+
 # API Key for Your Team
-# To find your team API key, go to https://bans.io/teams and locate it in the team settings.
+# To find your team API key, go to https://app.bans.io/ and locate it in the team settings.
 #
 # When using proxy mode, the plugin will automatically create a registered server for each server that is connected to the proxy.
 # The plugin will name the server after the server name and assign it to your team automatically.

@@ -6,7 +6,7 @@ plugins {
 
 defaultTasks("shadowJar")
 
-group = 'com.charliejoseph'
+group = 'io.bans'
 version = '1.0.0'
 
 subprojects {
@@ -24,7 +24,7 @@ subprojects {
     }
 
     shadowJar {
-        archiveFileName.set("${project.name}-exampleplugin-${rootProject.version}.jar")
+        archiveFileName.set("Bans-${project.name}-${rootProject.version}.jar")
     }
 
     repositories {

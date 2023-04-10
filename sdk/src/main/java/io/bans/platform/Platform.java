@@ -29,4 +29,11 @@ public interface Platform {
      * @param message The log message.
      */
     void log(PlatformLogLevel level, String message);
+
+    /**
+     * Returns the platform's configuration.
+     *
+     * @return The platform's configuration.
+     */
+    PlatformConfiguration getConfiguration();
 }
