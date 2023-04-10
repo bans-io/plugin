@@ -1,0 +1,6 @@
+name: ExamplePlugin
+version: '${version}'
+main: com.charliejoseph.plugin.ExamplePlugin
+commands:
+  exampleplugin:
+    description: The main command
