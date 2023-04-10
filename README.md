@@ -1,33 +1,25 @@
-# Minecraft Plugin Template
+The official Minecraft plugin for Bans.
 
-Streamline your plugin development with our pre-made Minecraft Plugin Template
+## Bans Plugin
 
-## Overview
+This repository contains the official Minecraft adapters for Bans, a free solution designed to help you track your Minecraft bans, warnings, and other related information.
 
-The Minecraft Plugin Template is a pre-made code structure designed to make it easy for developers to create custom Minecraft plugins with an included SDK. This template includes a multi-module Gradle project structure and support for Bukkit, BungeeCord, and Velocity servers. The SDK library is shared between all three server types, streamlining the development process and making it easier to maintain your code.
+## Installation
 
-## Features
+1. Download the latest version from our [downloads page](https://github.com/bans-io/plugin/releases).
+2. Follow the installation steps for [Analyse](https://github.com/track/plugin#readme).
 
-- Pre-made code structure for easy plugin development
-- Multi-module Gradle project structure
-- Compatibility with Bukkit, BungeeCord, and Velocity servers
-- Shared SDK library for streamlined code and easier maintenance
-- Shadow jar pre-configured for easy deployment
+## Compiling Bans
 
-## Getting Started
+1. Clone this repository using `git clone git@github.com:bans/plugin.git`.
+2. Make any necessary changes.
+3. Compile using `./gradlew`.
 
-To get started with the Minecraft Plugin Template, follow these steps:
+## Resources
 
-1. Press the "Use this Template" button at the top of the repository to create a new repo based on this template.
-2. Clone the new repo to your local machine using `git clone git@github.com:<username>/<repo>.git`
-3. Open the project in your preferred Java IDE and start building your plugin using the pre-made structure and included SDK.
+- [Bans.io](https://bans.io) - Learn more about Bans, its features, and how it can help you manage your server.
+- [Documentation](https://docs.bans.io) - Access detailed guidance on setting up Bans for your server.
 
-For more detailed instructions and documentation, please see the [wiki](link-to-wiki).
+## Support
 
-## Contributing
-
-We welcome contributions from the community! Please see our [Contributing Guidelines](link-to-guidelines) for more information.
-
-## License
-
-The Minecraft Plugin Template is released under the [MIT License](link-to-license).
+- Need help? Contact our team at [support @ bans.io](mailto:support@bans.io).
