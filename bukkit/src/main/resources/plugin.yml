@@ -1,6 +1,22 @@
-name: ExamplePlugin
+name: Bans
 version: '${version}'
-main: com.charliejoseph.plugin.ExamplePlugin
+author: kgm
+main: io.bans.plugin.BansPlugin
+description: A free solution designed to help you track your Minecraft bans, warnings, and other related information.
+website: https://bans.io
 commands:
-  exampleplugin:
-    description: The main command
+  bans:
+    description: The base plugin command.
+  ban:
+    description: Bans a player.
+  unban:
+    description: Unbans a player.
+  warn:
+    description: Warns a player.
+  timeout:
+    description: Timeout/mute a player.
+    aliases: [mute]
+  history:
+    description: Shows a player's history.
+  check:
+    description: Checks a player's status.

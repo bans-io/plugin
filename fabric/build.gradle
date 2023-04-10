@@ -4,12 +4,11 @@ version = rootProject.version
 dependencies {
     implementation project(':sdk')
 
-    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
 }
 
 shadowJar {
     configurations = [project.configurations.runtimeClasspath]
 
-    relocate 'bans.lib', 'io.bans.plugin.libs.bukkit' // Relocate this lib
+    relocate 'bans.lib', 'io.bans.plugin.libs.fabric' // Relocate this lib
     minimize()
 }

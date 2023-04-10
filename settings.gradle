@@ -1,6 +1,8 @@
-rootProject.name = 'ExamplePlugin'
+rootProject.name = 'Bans'
 
 include 'sdk'
 include 'bukkit'
 include 'bungeecord'
 include 'velocity'
+include 'fabric'
+include 'sponge'
