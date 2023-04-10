@@ -7,5 +7,4 @@ public interface PlatformConfiguration {
 
     void load();
     void reload();
-
 }

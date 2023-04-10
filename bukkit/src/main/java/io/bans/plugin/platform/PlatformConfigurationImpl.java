@@ -11,7 +11,6 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
 
     private final Platform platform;
     private final YamlDocument config;
-
     private String serverKey;
 
     public PlatformConfigurationImpl(Platform platform, File configFile) {
