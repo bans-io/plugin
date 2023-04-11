@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class DebugCommand extends PlatformCommand {
-    
+
     /**
      * Constructor for the DebugCommand.
      * @param platform The platform instance.

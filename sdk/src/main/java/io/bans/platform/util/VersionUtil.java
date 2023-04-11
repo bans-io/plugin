@@ -6,6 +6,13 @@ package io.bans.platform.util;
  * @author kgm (kylegrahammatzen)
  */
 public class VersionUtil {
+    /**
+     * Compare two version strings.
+     *
+     * @param currentVersion the current version
+     * @param newVersion the new version
+     * @return true if the new version is newer than the current version
+     */
     public static boolean isNewerVersion(String currentVersion, String newVersion) {
         String[] currentVersionArray = currentVersion.split("\\.");
         String[] newVersionArray = newVersion.split("\\.");

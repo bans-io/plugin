@@ -6,6 +6,7 @@ package io.bans.platform.util;
  * @author heychazza
  */
 public class StringUtil {
+
     /**
      * Pluralise a string based on a count.
      * @param count The count to base the pluralisation on.
