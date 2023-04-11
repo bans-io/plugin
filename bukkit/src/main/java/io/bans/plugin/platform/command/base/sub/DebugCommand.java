@@ -6,6 +6,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class DebugCommand extends PlatformCommand {
+    
+    /**
+     * Constructor for the DebugCommand.
+     * @param platform The platform instance.
+     */
     public DebugCommand(PlatformImpl platform) {
         super("debug", "Toggles Bans plugin-wide debug mode.", commandContext -> {
             CommandSender sender = (CommandSender) commandContext.getSender();

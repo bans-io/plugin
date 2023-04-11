@@ -193,6 +193,10 @@ public class PlatformImpl implements Platform {
         }
     }
 
+    /**
+     * Gets the configuration for the platform.
+     * @return The platform configuration.
+     */
     @Override
     public PlatformConfiguration getConfiguration() {
         return platformConfiguration;
@@ -207,7 +211,7 @@ public class PlatformImpl implements Platform {
         return debugMode;
     }
 
-/**
+    /**
      * Sets whether the platform is in debug mode.
      *
      * @param debugMode Whether the platform is in debug mode.

@@ -6,6 +6,10 @@ import org.bukkit.command.CommandSender;
 
 public class WarnCommand extends BasePlatformCommand {
 
+    /**
+     * Constructor for the WarnCommand.
+     * @param platform The platform instance.
+     */
     public WarnCommand(PlatformImpl platform) {
         super("warn", "Warns a player.", commandContext -> {
             CommandSender sender = (CommandSender) commandContext.getSender();

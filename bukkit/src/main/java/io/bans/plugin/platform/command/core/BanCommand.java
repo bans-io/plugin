@@ -6,6 +6,10 @@ import org.bukkit.command.CommandSender;
 
 public class BanCommand extends BasePlatformCommand {
 
+    /**
+     * Constructor for the BanCommand.
+     * @param platform The platform instance.
+     */
     public BanCommand(PlatformImpl platform) {
         super("ban", "Bans a player.", commandContext -> {
             CommandSender sender = (CommandSender) commandContext.getSender();

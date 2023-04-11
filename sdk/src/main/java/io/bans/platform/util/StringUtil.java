@@ -2,6 +2,8 @@ package io.bans.platform.util;
 
 /**
  * String utility methods.
+ *
+ * @author heychazza
  */
 public class StringUtil {
     /**

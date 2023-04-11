@@ -11,6 +11,8 @@ import java.nio.file.Files;
 
 /**
  * Utility class for extracting resources from the jar file.
+ * 
+ * @author kgm (kylegrahammatzen)
  */
 public final class ResourceUtil {
     private ResourceUtil() {

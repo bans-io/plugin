@@ -6,6 +6,10 @@ import org.bukkit.command.CommandSender;
 
 public class HistoryCommand extends BasePlatformCommand {
 
+    /**
+     * Constructor for the HistoryCommand.
+     * @param platform The platform instance.
+     */
     public HistoryCommand(PlatformImpl platform) {
         super("history", "Shows a player's history.", commandContext -> {
             CommandSender sender = (CommandSender) commandContext.getSender();

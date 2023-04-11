@@ -19,6 +19,10 @@ public class BansCommand implements CommandExecutor {
     private final PlatformImpl platform;
     private final HashMap<String, PlatformCommand> subCommands = new HashMap<>();
 
+    /**
+     * Constructor for the BansCommand.
+     * @param platform The platform instance.
+     */
     public BansCommand(PlatformImpl platform) {
         this.platform = platform;
 

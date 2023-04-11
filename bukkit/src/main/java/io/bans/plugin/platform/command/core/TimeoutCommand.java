@@ -6,6 +6,10 @@ import org.bukkit.command.CommandSender;
 
 public class TimeoutCommand extends BasePlatformCommand {
 
+    /**
+     * Constructor for the TimeoutCommand.
+     * @param platform The platform instance.
+     */
     public TimeoutCommand(PlatformImpl platform) {
         super("timeout", "Timeout/mute a player.", commandContext -> {
             CommandSender sender = (CommandSender) commandContext.getSender();

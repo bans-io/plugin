@@ -2,6 +2,8 @@ package io.bans.platform.util;
 
 /**
  * Utility class for version comparison.
+ *
+ * @author kgm (kylegrahammatzen)
  */
 public class VersionUtil {
     public static boolean isNewerVersion(String currentVersion, String newVersion) {

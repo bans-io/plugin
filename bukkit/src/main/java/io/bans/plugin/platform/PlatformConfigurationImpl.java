@@ -13,6 +13,11 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
     private final YamlDocument config;
     private String serverKey;
 
+    /**
+     * Create a new platform configuration
+     * @param platform The platform
+     * @param configFile The configuration file
+     */
     public PlatformConfigurationImpl(Platform platform, File configFile) {
         this.platform = platform;
 
@@ -23,11 +28,19 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
         }
     }
 
+    /**
+     * Get the configuration document
+     *
+     * @return The configuration document.
+     */
     @Override
     public YamlDocument get() {
         return config;
     }
 
+    /**
+     * Load the configuration
+     */
     @Override
     public void load() {
         try {
@@ -45,6 +58,9 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
         }
     }
 
+    /**
+     * Reload the configuration
+     */
     @Override
     public void reload() {
         try {
@@ -54,6 +70,11 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
         }
     }
 
+    /**
+     * Get the configured server key
+     *
+     * @return The server key
+     */
     public String getServerKey() {
         return serverKey;
     }
