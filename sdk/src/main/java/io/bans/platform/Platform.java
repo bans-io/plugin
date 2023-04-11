@@ -13,6 +13,22 @@ public interface Platform {
     PlatformType getType();
 
     /**
+     * Sets up the platform.
+     *
+     * @param key The key to use for the platform.
+     * @return Whether the platform was set up successfully.
+     */
+    boolean setup(String key);
+
+    /**
+     * Checks whether the platform is running the latest version of its type.
+     *
+     * @param currentVersion The current version of the platform.
+     * @return The latest version of the platform, or null if the platform is running the latest version.
+     */
+    String isRunningLatestVersion(String currentVersion);
+
+    /**
      * Starts the platform.
      */
     void start();

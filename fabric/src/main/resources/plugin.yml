@@ -1,3 +1,0 @@
-name: Bans
-version: '${version}'
-main: io.bans.plugin.BansPlugin

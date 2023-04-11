@@ -39,9 +39,7 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
                 return;
             }
 
-            serverKey = config.getString("server-key");
-
-            platform.log(PlatformLogLevel.INFO, "Loaded configuration file");
+            serverKey = config.getString("server_key");
         } catch (Exception e) {
             platform.log(PlatformLogLevel.ERROR, String.format("Failed to load configuration file: %s", e));
         }

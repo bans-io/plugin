@@ -4,11 +4,16 @@ import io.bans.platform.Platform;
 import io.bans.platform.PlatformConfiguration;
 import io.bans.platform.PlatformLogLevel;
 import io.bans.platform.PlatformType;
-import io.bans.platform.command.PlatformCommand;
+import io.bans.platform.util.VersionUtil;
 import io.bans.plugin.BansPlugin;
 import io.bans.plugin.platform.command.base.BansCommand;
+import io.bans.plugin.platform.command.core.*;
 
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import static io.bans.platform.util.ResourceUtil.getBundledFile;
 
@@ -17,11 +22,10 @@ import static io.bans.platform.util.ResourceUtil.getBundledFile;
  */
 public class PlatformImpl implements Platform {
 
+    private final int API_VERSION = 1;
+    private final String API_URL = String.format("http://localhost:3000/api/v%d", API_VERSION);
     private final BansPlugin bansPlugin;
     private final PlatformConfigurationImpl platformConfiguration;
-
-    private final HashMap<String, PlatformCommand> commands = new HashMap<>();
-
     private boolean debugMode;
 
     /**
@@ -45,6 +49,89 @@ public class PlatformImpl implements Platform {
     }
 
     /**
+     * Sets up the platform.
+     *
+     * @param key The key to use for the platform.
+     * @return Whether the platform was set up successfully.
+     */
+    @Override
+    public boolean setup(String key) {
+        if (key == null || key.isEmpty()) {
+            return false;
+        }
+
+        try {
+            URL url = new URL(String.format("%s/%s/server", getType().name().toLowerCase(), API_URL));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("X-SERVER-TOKEN", key);
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == 200) {
+                return true;
+            } else if (responseCode == 401) {
+                return false;
+            } else {
+                this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information, unexpected response code: %d", responseCode));
+                return false;
+            }
+        } catch (IOException e) {
+            this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information: %s", e.getMessage()));
+            return false;
+        }
+    }
+
+    /**
+     * Checks whether the platform is running the latest version of its type.
+     *
+     * @param currentVersion The current version of the platform.
+     * @return Whether the platform is running the latest version of its type.
+     */
+    @Override
+    public String isRunningLatestVersion(String currentVersion) {
+
+        if (currentVersion == null || currentVersion.isEmpty()) {
+            return null;
+        }
+
+        try {
+            URL url = new URL(String.format("%s/plugin/minecraft/%s", API_URL, getType().name().toLowerCase()));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                in.close();
+
+                // Check if the current version is the latest
+                if (VersionUtil.isNewerVersion(currentVersion, response.toString())) {
+                    return response.toString();
+                } else {
+                    return null;
+                }
+            } else {
+                this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve plugin information, unexpected response code: %d", responseCode));
+                return null;
+            }
+        } catch (IOException e) {
+            this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve plugin information: %s", e.getMessage()));
+            return null;
+        }
+    }
+
+    /**
      * Starts the platform.
      */
     @Override
@@ -53,12 +140,30 @@ public class PlatformImpl implements Platform {
         // Load configuration
         this.platformConfiguration.load();
 
+        // Check if server is set up
+        if (!setup(platformConfiguration.getServerKey())) {
+            log(PlatformLogLevel.ERROR, "No server key was provided. Please set one in the configuration.");
+            return;
+        }
+
+        String latestVersion = isRunningLatestVersion(bansPlugin.getDescription().getVersion());
+
+        // Check if the server is running the latest version of the plugin
+        if (latestVersion != null) {
+            log(PlatformLogLevel.WARN, String.format("This server is running v%s, an outdated version of Bans.", bansPlugin.getDescription().getVersion()));
+            log(PlatformLogLevel.WARN, String.format("Download the latest at: https://downloads.bans.io/bukkit/%s", latestVersion));
+        }
+
         // Register commands
         bansPlugin.getCommand("bans").setExecutor(new BansCommand(this));
 
-        // Outdated version of the plugin
-//        log(PlatformLogLevel.WARN, String.format("This server is running v%s, an outdated version of Bans.", bansPlugin.getDescription().getVersion()));
-//        log(PlatformLogLevel.WARN, String.format("Download the latest at: https://downloads.bans.io/bukkit/%s", "todo"));
+        bansPlugin.getCommand("ban").setExecutor(new BanCommand(this));
+        bansPlugin.getCommand("check").setExecutor(new CheckCommand(this));
+        bansPlugin.getCommand("history").setExecutor(new HistoryCommand(this));
+        bansPlugin.getCommand("timeout").setExecutor(new TimeoutCommand(this));
+        bansPlugin.getCommand("unban").setExecutor(new UnbanCommand(this));
+        bansPlugin.getCommand("warn").setExecutor(new WarnCommand(this));
+
     }
 
     /**
@@ -91,15 +196,6 @@ public class PlatformImpl implements Platform {
     @Override
     public PlatformConfiguration getConfiguration() {
         return platformConfiguration;
-    }
-
-    /**
-     * Gets the platform's commands.
-     *
-     * @return The platform commands map.
-     */
-    public HashMap<String, PlatformCommand> getCommands() {
-        return commands;
     }
 
     /**

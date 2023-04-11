@@ -20,6 +20,16 @@ public class PlatformImpl implements Platform {
     }
 
     @Override
+    public boolean setup(String key) {
+        return false;
+    }
+
+    @Override
+    public String isRunningLatestVersion(String currentVersion) {
+        return null;
+    }
+
+    @Override
     public void start() {
 
         // Outdated version of the plugin

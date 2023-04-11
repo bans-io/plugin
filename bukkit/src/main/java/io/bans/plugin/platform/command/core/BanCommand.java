@@ -1,5 +1,16 @@
 package io.bans.plugin.platform.command.core;
 
-public class BanCommand {
+import io.bans.plugin.platform.PlatformImpl;
+import io.bans.plugin.platform.util.BasePlatformCommand;
+import org.bukkit.command.CommandSender;
 
+public class BanCommand extends BasePlatformCommand {
+
+    public BanCommand(PlatformImpl platform) {
+        super("ban", "Bans a player.", commandContext -> {
+            CommandSender sender = (CommandSender) commandContext.getSender();
+
+            sender.sendMessage("This command is not yet implemented.");
+        });
+    }
 }

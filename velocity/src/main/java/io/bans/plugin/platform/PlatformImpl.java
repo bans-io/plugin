@@ -9,9 +9,7 @@ import io.bans.plugin.BansPlugin;
 
 import java.nio.file.Path;
 import java.util.logging.Logger;
-
 public class PlatformImpl implements Platform {
-
     private final BansPlugin bansPlugin;
     private final ProxyServer proxy;
     private final Logger logger;
@@ -27,6 +25,16 @@ public class PlatformImpl implements Platform {
     @Override
     public PlatformType getType() {
         return PlatformType.VELOCITY;
+    }
+
+    @Override
+    public boolean setup(String key) {
+        return false;
+    }
+
+    @Override
+    public String isRunningLatestVersion(String currentVersion) {
+        return null;
     }
 
     @Override
