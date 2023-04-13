@@ -10,6 +10,7 @@ import io.bans.platform.util.VersionUtil;
 import io.bans.plugin.BansPlugin;
 import io.bans.plugin.platform.command.base.BansCommand;
 import io.bans.plugin.platform.command.core.*;
+import io.bans.plugin.platform.util.TimeFormat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,8 +27,10 @@ public class PlatformImpl implements Platform {
 
     private final int API_VERSION = 1;
     private final String API_URL = String.format("http://localhost:3000/api/v%d", API_VERSION);
+    private final TimeFormat TIMEFORMAT = new TimeFormat();
     private final BansPlugin bansPlugin;
     private final PlatformConfigurationImpl platformConfiguration;
+
     private boolean debugMode;
 
     /**
@@ -63,7 +66,7 @@ public class PlatformImpl implements Platform {
         }
 
         try {
-            URL url = new URL(String.format("%s/%s/server", getType().name().toLowerCase(), API_URL));
+            URL url = new URL(String.format("%s/minecraft/server", API_URL));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
@@ -144,7 +147,7 @@ public class PlatformImpl implements Platform {
 
         // Check if server is set up
         if (!setup(platformConfiguration.getServerKey())) {
-            log(PlatformLogLevel.ERROR, "The server key may not have been provided or could be invalid, please ensure that it is properly configured.");
+            log(PlatformLogLevel.ERROR, "Ensure the server key is valid and properly configured.");
             return;
         }
 
@@ -165,6 +168,8 @@ public class PlatformImpl implements Platform {
         bansPlugin.getCommand("ban").setExecutor(new BanCommand(this));
         bansPlugin.getCommand("check").setExecutor(new CheckCommand(this));
         bansPlugin.getCommand("history").setExecutor(new HistoryCommand(this));
+        bansPlugin.getCommand("kick").setExecutor(new KickCommand(this));
+        bansPlugin.getCommand("kickall").setExecutor(new KickAllCommand(this));
         bansPlugin.getCommand("timeout").setExecutor(new TimeoutCommand(this));
         bansPlugin.getCommand("unban").setExecutor(new UnbanCommand(this));
         bansPlugin.getCommand("warn").setExecutor(new WarnCommand(this));
@@ -173,7 +178,7 @@ public class PlatformImpl implements Platform {
 
     private JsonObject getServerConfiguration() {
         try {
-            URL url = new URL(String.format("%s/%s/server/configuration", getType().name().toLowerCase(), API_URL));
+            URL url = new URL(String.format("%s/minecraft/server/configuration", API_URL));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("GET");
@@ -235,8 +240,17 @@ public class PlatformImpl implements Platform {
      * @return The platform configuration.
      */
     @Override
-    public PlatformConfiguration getConfiguration() {
+    public PlatformConfigurationImpl getConfiguration() {
         return platformConfiguration;
+    }
+
+    /**
+     * Gets the time formatter for the platform.
+     *
+     * @return The time formatter.
+     */
+    public TimeFormat getTimeFormatter() {
+        return TIMEFORMAT;
     }
 
     /**

@@ -16,6 +16,10 @@ commands:
   timeout:
     description: Timeout/mute a player.
     aliases: [mute]
+  kick:
+    description: Kicks a player.
+  kickall:
+    description: Kicks all players.
   history:
     description: Shows a player's history.
   check:

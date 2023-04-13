@@ -5,14 +5,19 @@ import dev.dejvokep.boostedyaml.YamlDocument;
 import io.bans.platform.Platform;
 import io.bans.platform.PlatformConfiguration;
 import io.bans.platform.PlatformLogLevel;
+import io.bans.platform.PlatformTemplate;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlatformConfigurationImpl implements PlatformConfiguration {
 
     private final Platform platform;
     private final YamlDocument config;
     private String serverKey;
+
+    private final Map<String, Map<String, PlatformTemplate>> templates = new HashMap<>();
 
     /**
      * Create a new platform configuration
@@ -76,7 +81,7 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
      * @param serverData The server data
      */
     public void configure(JsonObject serverData) {
-
+        templates.clear();
     }
 
     /**
@@ -86,5 +91,32 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
      */
     public String getServerKey() {
         return serverKey;
+    }
+
+    /**
+     * Get the configured templates
+     * @return The templates
+     */
+    public Map<String, Map<String, PlatformTemplate>> getTemplates() {
+        return templates;
+    }
+
+    /**
+     * Get the configured templates for a specific type
+     * @param type The type
+     * @return The templates
+     */
+    public Map<String, PlatformTemplate> getTemplates(String type) {
+        return templates.get(type);
+    }
+
+    /**
+     * Get a specific template
+     * @param type The type
+     * @param name The name
+     * @return The template
+     */
+    public PlatformTemplate getTemplate(String type, String name) {
+        return templates.get(type).get(name);
     }
 }
