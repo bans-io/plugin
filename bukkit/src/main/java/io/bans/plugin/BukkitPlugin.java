@@ -1,23 +1,23 @@
 package io.bans.plugin;
 
 import io.bans.platform.enums.PlatformLogLevel;
-import io.bans.plugin.platform.PlatformImpl;
-import net.md_5.bungee.api.plugin.Plugin;
+import io.bans.plugin.platform.BukkitPlatform;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * The Bukkit plugin implementation of Bans.
  * <p>
- * Written by kgm (kylegrahammatzen) on April 10, 2023.
+ * Written by kgm (kylegrahammatzen) on April 8, 2023.
  * @since 1.0.0
  */
-public class BansPlugin extends Plugin {
-    private final PlatformImpl platform;
+public class BukkitPlugin extends JavaPlugin {
+    private final BukkitPlatform platform;
 
     /**
      * Instantiates a new BansPlugin object.
      */
-    public BansPlugin() {
-        this.platform = new PlatformImpl(this);
+    public BukkitPlugin() {
+        this.platform = new BukkitPlatform(this);
     }
 
     /**

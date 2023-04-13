@@ -1,9 +1,9 @@
 package io.bans.plugin.platform;
 
-import io.bans.platform.Platform;
-import io.bans.platform.PlatformConfiguration;
-import io.bans.platform.PlatformLogLevel;
-import io.bans.platform.PlatformType;
+import io.bans.platform.domain.Platform;
+import io.bans.platform.configuration.PlatformConfiguration;
+import io.bans.platform.enums.PlatformLogLevel;
+import io.bans.platform.enums.PlatformType;
 import io.bans.plugin.BansPlugin;
 
 public class PlatformImpl implements Platform {
