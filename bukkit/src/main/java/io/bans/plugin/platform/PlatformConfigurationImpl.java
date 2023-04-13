@@ -1,5 +1,6 @@
 package io.bans.plugin.platform;
 
+import com.google.gson.JsonObject;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import io.bans.platform.Platform;
 import io.bans.platform.PlatformConfiguration;
@@ -68,6 +69,14 @@ public class PlatformConfigurationImpl implements PlatformConfiguration {
         } catch (Exception e) {
             platform.log(PlatformLogLevel.ERROR, String.format("Failed to reload configuration file: %s", e));
         }
+    }
+
+    /**
+     * Configure the platform with data from the API
+     * @param serverData The server data
+     */
+    public void configure(JsonObject serverData) {
+
     }
 
     /**

@@ -1,5 +1,7 @@
 package io.bans.plugin.platform;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.bans.platform.Platform;
 import io.bans.platform.PlatformConfiguration;
 import io.bans.platform.PlatformLogLevel;
@@ -134,7 +136,7 @@ public class PlatformImpl implements Platform {
     /**
      * Starts the platform.
      */
-    @Override
+    @Override @SuppressWarnings("ConstantConditions")
     public void start() {
 
         // Load configuration
@@ -142,7 +144,7 @@ public class PlatformImpl implements Platform {
 
         // Check if server is set up
         if (!setup(platformConfiguration.getServerKey())) {
-            log(PlatformLogLevel.ERROR, "No server key was provided. Please set one in the configuration.");
+            log(PlatformLogLevel.ERROR, "The server key may not have been provided or could be invalid, please ensure that it is properly configured.");
             return;
         }
 
@@ -154,6 +156,9 @@ public class PlatformImpl implements Platform {
             log(PlatformLogLevel.WARN, String.format("Download the latest at: https://downloads.bans.io/bukkit/%s", latestVersion));
         }
 
+        // Configure platform based on online dashboard configuration
+        this.platformConfiguration.configure(getServerConfiguration());
+
         // Register commands
         bansPlugin.getCommand("bans").setExecutor(new BansCommand(this));
 
@@ -164,6 +169,38 @@ public class PlatformImpl implements Platform {
         bansPlugin.getCommand("unban").setExecutor(new UnbanCommand(this));
         bansPlugin.getCommand("warn").setExecutor(new WarnCommand(this));
 
+    }
+
+    private JsonObject getServerConfiguration() {
+        try {
+            URL url = new URL(String.format("%s/%s/server/configuration", getType().name().toLowerCase(), API_URL));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("X-SERVER-TOKEN", platformConfiguration.getServerKey());
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+
+                in.close();
+
+                return JsonParser.parseString(response.toString()).getAsJsonObject();
+            } else {
+                this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information, unexpected response code: %d", responseCode));
+                return null;
+            }
+        } catch (IOException e) {
+            this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information: %s", e.getMessage()));
+            return null;
+        }
     }
 
     /**
