@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class PlayerJoinListener implements Listener {
 
     private final BukkitPlatform bukkitPlatform;
@@ -22,11 +24,15 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
 
         // Check if player is banned
-        PlatformPlayer platformPlayer = bukkitPlatform.getValidator().getPlayer(player.getUniqueId());
+        Optional<PlatformPlayer> platformPlayer = Optional.ofNullable(bukkitPlatform.getValidator().getPlayer(player.getUniqueId()));
 
-        if (platformPlayer.getBans().size() > 0) {
-            player.kickPlayer(platformPlayer.getBans().get(0).getReason());
-            return;
+        if (platformPlayer.isPresent()) {
+            PlatformPlayer playerData = platformPlayer.get();
+
+            if (playerData.isBanned()) {
+                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, playerData.getBanReason());
+                return;
+            }
         }
 
         String hostName = event.getHostname();

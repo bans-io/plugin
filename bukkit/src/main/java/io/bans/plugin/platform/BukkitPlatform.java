@@ -24,7 +24,7 @@ import java.net.URL;
 import static io.bans.platform.utils.ResourceUtil.getBundledFile;
 
 /**
- * The platform implementation for Bukkit.
+ * The Bukkit-specific platform implementation.
  */
 public class BukkitPlatform implements Platform {
 
@@ -39,8 +39,8 @@ public class BukkitPlatform implements Platform {
     private boolean debugMode;
 
     /**
-     * Creates a new platform implementation.
-     * @param bukkitPlugin The plugin object.
+     * Instantiates a new platform implementation.
+     * @param bukkitPlugin The plugin instance associated with this platform.
      */
     public BukkitPlatform(BukkitPlugin bukkitPlugin) {
         this.bukkitPlugin = bukkitPlugin;
@@ -51,10 +51,13 @@ public class BukkitPlatform implements Platform {
         this.debugMode = false;
     }
 
+    public String getAPI_URL() {
+        return API_URL;
+    }
+
     /**
-     * Gets the type of platform.
-     *
-     * @return The platform type.
+     * Retrieves the platform type.
+     * @return The type of the platform.
      */
     @Override
     public PlatformType getType() {
@@ -62,10 +65,9 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Sets up the platform.
-     *
-     * @param key The key to use for the platform.
-     * @return Whether the platform was set up successfully.
+     * Configures the platform using the provided key.
+     * @param key The configuration key for the platform.
+     * @return Whether the platform was configured successfully.
      */
     @Override
     public boolean setup(String key) {
@@ -101,10 +103,9 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Checks whether the platform is running the latest version of its type.
-     *
+     * Determines if the platform is running the most recent version of its type.
      * @param currentVersion The current version of the platform.
-     * @return Whether the platform is running the latest version of its type.
+     * @return Whether the platform is running the latest version available for its type.
      */
     @Override
     public String isRunningLatestVersion(String currentVersion) {
@@ -149,7 +150,7 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Starts the platform.
+     * Initiates the platform.
      */
     @Override @SuppressWarnings("ConstantConditions")
     public void start() {
@@ -185,11 +186,18 @@ public class BukkitPlatform implements Platform {
         // Configure platform based on online dashboard configuration
         this.platformConfiguration.configure(getServerConfiguration());
 
+        // Send session end request to Bans for players online (if any from a previous session)
+        this.getManager().endSession();
+
         // Register events
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), bukkitPlugin);
         Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(this), bukkitPlugin);
     }
 
+    /**
+     * Retrieves the server configuration as a JsonObject.
+     * @return The server configuration in a JsonObject format.
+     */
     private JsonObject getServerConfiguration() {
         try {
             URL url = new URL(String.format("%s/minecraft/server/configuration", API_URL));
@@ -223,7 +231,7 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Stops the platform.
+     * Shuts down the platform.
      */
     @Override
     public void stop() {
@@ -232,9 +240,9 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Logs a message to the console.
-     * @param level The log level.
-     * @param message The log message.
+     * Outputs a log message to the console.
+     * @param level The desired log level.
+     * @param message The message to be logged.
      */
     @Override
     public void log(PlatformLogLevel level, String message) {
@@ -251,7 +259,7 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Gets the configuration for the platform.
+     * Retrieves the configuration settings for the platform.
      * @return The platform configuration.
      */
     @Override
@@ -260,59 +268,58 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
-     * Gets the manager for the platform.
-     * @return The platform manager.
+     * Obtains the manager responsible for the platform.
+     * @return The platform manager instance.
      */
     @Override
     public BukkitPlatformManager getManager() {
         return platformManager;
     }
 
+    /**
+     * Obtains the validator responsible for the platform.
+     * @return The platform validator instance.
+     */
     @Override
     public BukkitPlatformValidator getValidator() {
         return platformValidator;
     }
 
     /**
-     * Gets the time formatter for the platform.
-     *
-     * @return The time formatter.
+     * Acquires the time formatter used by the platform.
+     * @return The time formatter instance.
      */
     public TimeFormat getTimeFormatter() {
         return TIMEFORMAT;
     }
 
     /**
-     * Gets whether the platform is set up.
-     *
-     * @return Whether the platform is set up.
+     * Determines if the platform is properly set up.
+     * @return True if the platform is set up, otherwise false.
      */
     public boolean isSetup() {
         return setup;
     }
 
     /**
-     * Gets whether the platform is in debug mode.
-     *
-     * @return Whether the platform is in debug mode.
+     * Checks if the platform is operating in debug mode.
+     * @return True if the platform is in debug mode, otherwise false.
      */
     public boolean isDebugMode() {
         return debugMode;
     }
 
     /**
-     * Sets whether the platform is in debug mode.
-     *
-     * @param debugMode Whether the platform is in debug mode.
+     * Assigns the debug mode status for the platform.
+     * @param debugMode The debug mode status to be assigned.
      */
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
     }
 
     /**
-     * Gets the version of the plugin.
-     *
-     * @return the version
+     * Retrieves the version number of the plugin.
+     * @return The plugin version.
      */
     public String getVersion() {
         return bukkitPlugin.getDescription().getVersion();

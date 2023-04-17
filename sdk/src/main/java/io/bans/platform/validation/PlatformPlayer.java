@@ -39,4 +39,12 @@ public class PlatformPlayer {
     public List<PlatformMute> getTimeouts() {
         return mutesList;
     }
+
+    public boolean isBanned() {
+        return !bansList.isEmpty() && bansList.get(0).isExpired();
+    }
+
+    public String getBanReason() {
+        return bansList.get(0).getReason();
+    }
 }

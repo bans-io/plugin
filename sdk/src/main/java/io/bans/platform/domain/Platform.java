@@ -7,62 +7,62 @@ import io.bans.platform.configuration.PlatformConfiguration;
 import io.bans.platform.validation.PlatformValidator;
 
 /**
- * Interface for platform-specific functionality that can be used by a plugin.
+ * Interface for platform-specific functionality.
  */
 public interface Platform {
 
     /**
-     * Retrieves the classification of the platform.
-     * @return A PlatformType enumeration representing the specific category of the platform.
+     * Retrieves the platform type.
+     * @return The type of the platform.
      */
     PlatformType getType();
 
     /**
-     * Sets up the platform.
-     * @param key The key to use for the platform.
-     * @return Whether the platform was set up successfully.
+     * Configures the platform using the provided key.
+     * @param key The configuration key for the platform.
+     * @return Whether the platform was configured successfully.
      */
     boolean setup(String key);
 
     /**
-     * Checks whether the platform is running the latest version of its type.
+     * Determines if the platform is running the most recent version of its type.
      * @param currentVersion The current version of the platform.
-     * @return The latest version of the platform, or null if the platform is running the latest version.
+     * @return Whether the platform is running the latest version available for its type.
      */
     String isRunningLatestVersion(String currentVersion);
 
     /**
-     * Starts the platform.
+     * Initiates the platform.
      */
     void start();
 
     /**
-     * Stops the platform.
+     * Shuts down the platform.
      */
     void stop();
 
     /**
-     * Logs a message with the specified level.
-     * @param level The log level.
-     * @param message The log message.
+     * Outputs a log message to the console.
+     * @param level The desired log level.
+     * @param message The message to be logged.
      */
     void log(PlatformLogLevel level, String message);
 
     /**
-     * Retrieves the current configuration settings for the platform.
-     * @return A PlatformConfiguration object containing the platform's configuration settings.
+     * Retrieves the configuration settings for the platform.
+     * @return The platform configuration.
      */
     PlatformConfiguration getConfiguration();
 
     /**
-     * Provides access to the platform's management functionality.
-     * @return A PlatformManager object responsible for managing the platform's resources and processes.
+     * Obtains the manager responsible for the platform.
+     * @return The platform manager instance.
      */
     PlatformManager getManager();
 
     /**
-     * Obtains the platform's validation utility.
-     * @return A PlatformValidator object responsible for validating platform-related data and operations.
+     * Obtains the validator responsible for the platform.
+     * @return The platform validator instance.
      */
     PlatformValidator getValidator();
 }

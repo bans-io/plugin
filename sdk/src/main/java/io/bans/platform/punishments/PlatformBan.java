@@ -47,4 +47,8 @@ public class PlatformBan {
     public LocalDateTime getExpirationTime() {
         return expirationTime;
     }
+
+    public boolean isExpired() {
+        return expirationTime.isBefore(LocalDateTime.now());
+    }
 }
