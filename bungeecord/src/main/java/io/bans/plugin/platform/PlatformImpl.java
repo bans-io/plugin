@@ -2,8 +2,10 @@ package io.bans.plugin.platform;
 
 import io.bans.platform.domain.Platform;
 import io.bans.platform.configuration.PlatformConfiguration;
+import io.bans.platform.domain.PlatformManager;
 import io.bans.platform.enums.PlatformLogLevel;
 import io.bans.platform.enums.PlatformType;
+import io.bans.platform.validation.PlatformValidator;
 import io.bans.plugin.BansPlugin;
 
 public class PlatformImpl implements Platform {
@@ -58,6 +60,16 @@ public class PlatformImpl implements Platform {
 
     @Override
     public PlatformConfiguration getConfiguration() {
+        return null;
+    }
+
+    @Override
+    public PlatformManager getManager() {
+        return null;
+    }
+
+    @Override
+    public PlatformValidator getValidator() {
         return null;
     }
 }

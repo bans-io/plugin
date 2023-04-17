@@ -4,21 +4,21 @@ import io.bans.platform.enums.PlatformLogLevel;
 import io.bans.platform.enums.PlatformType;
 import io.bans.platform.configuration.PlatformConfiguration;
 
+import io.bans.platform.validation.PlatformValidator;
+
 /**
  * Interface for platform-specific functionality that can be used by a plugin.
  */
 public interface Platform {
 
     /**
-     * Returns the type of the platform.
-     *
-     * @return The platform type.
+     * Retrieves the classification of the platform.
+     * @return A PlatformType enumeration representing the specific category of the platform.
      */
     PlatformType getType();
 
     /**
      * Sets up the platform.
-     *
      * @param key The key to use for the platform.
      * @return Whether the platform was set up successfully.
      */
@@ -26,7 +26,6 @@ public interface Platform {
 
     /**
      * Checks whether the platform is running the latest version of its type.
-     *
      * @param currentVersion The current version of the platform.
      * @return The latest version of the platform, or null if the platform is running the latest version.
      */
@@ -44,16 +43,26 @@ public interface Platform {
 
     /**
      * Logs a message with the specified level.
-     *
      * @param level The log level.
      * @param message The log message.
      */
     void log(PlatformLogLevel level, String message);
 
     /**
-     * Returns the platform's configuration.
-     *
-     * @return The platform's configuration.
+     * Retrieves the current configuration settings for the platform.
+     * @return A PlatformConfiguration object containing the platform's configuration settings.
      */
     PlatformConfiguration getConfiguration();
+
+    /**
+     * Provides access to the platform's management functionality.
+     * @return A PlatformManager object responsible for managing the platform's resources and processes.
+     */
+    PlatformManager getManager();
+
+    /**
+     * Obtains the platform's validation utility.
+     * @return A PlatformValidator object responsible for validating platform-related data and operations.
+     */
+    PlatformValidator getValidator();
 }

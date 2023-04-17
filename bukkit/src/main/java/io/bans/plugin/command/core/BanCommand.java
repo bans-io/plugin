@@ -1,12 +1,15 @@
 package io.bans.plugin.command.core;
 
 import io.bans.platform.templates.PlatformTemplate;
+import io.bans.platform.validation.PlatformPlayer;
 import io.bans.plugin.platform.BukkitPlatform;
 import io.bans.plugin.utils.BasePlatformCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class BanCommand extends BasePlatformCommand {
 
@@ -18,25 +21,31 @@ public class BanCommand extends BasePlatformCommand {
         super("ban", "Bans a player.", commandContext -> {
             CommandSender sender = (CommandSender) commandContext.getSender();
 
+            if (!platform.isSetup()) {
+                sender.sendMessage(ChatColor.RED + "Bans is not setup yet. Please try again later.");
+                return;
+            }
+
             if (commandContext.getArguments().length < 1) {
                 sender.sendMessage(ChatColor.RED + "Usage: /ban <player> [-d <duration>] [-r <reason>] [-t <template>]");
                 return;
             }
 
-            OfflinePlayer target = Bukkit.getOfflinePlayer(commandContext.getArguments()[0]);
-            if (!target.hasPlayedBefore()) {
-                sender.sendMessage(ChatColor.RED + "Player not found.");
+            PlatformPlayer platformPlayer = platform.getValidator().getPlayer(commandContext.getArguments()[0]);
+
+            if (platformPlayer == null) {
+                sender.sendMessage(String.format("%s%s is not a valid player.", ChatColor.RED, commandContext.getArguments()[0]));
                 return;
             }
 
             String[] args = commandContext.getArguments();
             String reason = "";
-            long duration = -1L;
-            PlatformTemplate template = null;
+            AtomicLong duration = new AtomicLong(-1);
+            PlatformTemplate template;
 
             for (int i = 1; i < args.length; i++) {
                 if ("-d".equalsIgnoreCase(args[i]) && i + 1 < args.length) {
-                    duration = platform.getTimeFormatter().getDuration(args[++i]);
+                    duration.set(platform.getTimeFormatter().getDuration(args[++i]));
                 } else if ("-r".equalsIgnoreCase(args[i]) && i + 1 < args.length) {
                     reason = args[++i];
                 } else if ("-t".equalsIgnoreCase(args[i]) && i + 1 < args.length) {
@@ -48,18 +57,21 @@ public class BanCommand extends BasePlatformCommand {
                     }
 
                     template = platform.getConfiguration().getTemplate("ban", templateName);
-                    duration = template.getDuration();
+                    duration.set(template.getDuration());
                     reason = template.getReason();
 
                     break;
                 }
             }
 
-            if (duration >= 0) {
-                //platform.getManager().ban(target.getUniqueId(), sender.getName(), reason, duration);
-            } else {
-                //platform.getManager().ban(target.getUniqueId(), sender.getName(), reason);
-            }
+            CompletableFuture<Boolean> banResult = platform.getManager().ban(UUID.fromString(platformPlayer.getUuid()), sender.getName(), reason, duration.get());
+            banResult.thenAccept(result -> {
+                if (result) {
+                    sender.sendMessage(String.format("%s%s has been banned for %s.", ChatColor.GREEN, platformPlayer.getName(), platform.getTimeFormatter().getDuration(duration.get())));
+                } else {
+                    sender.sendMessage(String.format("%s%s is already banned.", ChatColor.RED, platformPlayer.getName()));
+                }
+            });
         });
     }
 }

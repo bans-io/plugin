@@ -5,13 +5,15 @@ import com.google.gson.JsonParser;
 import io.bans.platform.domain.Platform;
 import io.bans.platform.enums.PlatformLogLevel;
 import io.bans.platform.enums.PlatformType;
+import io.bans.platform.utils.TimeFormat;
 import io.bans.platform.utils.VersionUtil;
-
 import io.bans.plugin.BukkitPlugin;
 import io.bans.plugin.command.base.BansCommand;
 import io.bans.plugin.command.core.*;
-import io.bans.platform.utils.TimeFormat;
 import io.bans.plugin.configuration.BukkitPlatformConfiguration;
+import io.bans.plugin.event.PlayerJoinListener;
+import io.bans.plugin.event.PlayerQuitListener;
+import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +33,9 @@ public class BukkitPlatform implements Platform {
     private final TimeFormat TIMEFORMAT = new TimeFormat();
     private final BukkitPlugin bukkitPlugin;
     private final BukkitPlatformConfiguration platformConfiguration;
-
+    private final BukkitPlatformManager platformManager;
+    private final BukkitPlatformValidator platformValidator;
+    private boolean setup;
     private boolean debugMode;
 
     /**
@@ -41,6 +45,9 @@ public class BukkitPlatform implements Platform {
     public BukkitPlatform(BukkitPlugin bukkitPlugin) {
         this.bukkitPlugin = bukkitPlugin;
         this.platformConfiguration = new BukkitPlatformConfiguration(this, getBundledFile(this, bukkitPlugin.getDataFolder(), "config.yml"));
+        this.platformManager = new BukkitPlatformManager(this);
+        this.platformValidator = new BukkitPlatformValidator(this);
+        this.setup = false;
         this.debugMode = false;
     }
 
@@ -75,14 +82,18 @@ public class BukkitPlatform implements Platform {
 
             int responseCode = connection.getResponseCode();
 
-            if (responseCode == 200) {
-                return true;
-            } else if (responseCode == 401) {
-                return false;
-            } else {
-                this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information, unexpected response code: %d", responseCode));
-                return false;
+            switch (responseCode) {
+                case 200:
+                    return true;
+                case 401:
+                    // Handle 401 response code
+                    break;
+                default:
+                    this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information, unexpected response code: %d", responseCode));
+                    break;
             }
+
+            return false;
         } catch (IOException e) {
             this.log(PlatformLogLevel.ERROR, String.format("Failed to retrieve server information: %s", e.getMessage()));
             return false;
@@ -143,11 +154,22 @@ public class BukkitPlatform implements Platform {
     @Override @SuppressWarnings("ConstantConditions")
     public void start() {
 
+        // Register commands
+        bukkitPlugin.getCommand("bans").setExecutor(new BansCommand(this));
+
+        bukkitPlugin.getCommand("ban").setExecutor(new BanCommand(this));
+        bukkitPlugin.getCommand("check").setExecutor(new CheckCommand(this));
+        bukkitPlugin.getCommand("history").setExecutor(new HistoryCommand(this));
+        bukkitPlugin.getCommand("kick").setExecutor(new KickCommand(this));
+        bukkitPlugin.getCommand("kickall").setExecutor(new KickAllCommand(this));
+        bukkitPlugin.getCommand("mute").setExecutor(new MuteCommand(this));
+        bukkitPlugin.getCommand("unban").setExecutor(new UnbanCommand(this));
+        bukkitPlugin.getCommand("warn").setExecutor(new WarnCommand(this));
+
         // Load configuration
         this.platformConfiguration.load();
 
-        // Check if server is set up
-        if (!setup(platformConfiguration.getServerKey())) {
+        if (!(setup = setup(platformConfiguration.getServerKey()))) {
             log(PlatformLogLevel.ERROR, "Ensure the server key is valid and properly configured.");
             return;
         }
@@ -163,18 +185,9 @@ public class BukkitPlatform implements Platform {
         // Configure platform based on online dashboard configuration
         this.platformConfiguration.configure(getServerConfiguration());
 
-        // Register commands
-        bukkitPlugin.getCommand("bans").setExecutor(new BansCommand(this));
-
-        bukkitPlugin.getCommand("ban").setExecutor(new BanCommand(this));
-        bukkitPlugin.getCommand("check").setExecutor(new CheckCommand(this));
-        bukkitPlugin.getCommand("history").setExecutor(new HistoryCommand(this));
-        bukkitPlugin.getCommand("kick").setExecutor(new KickCommand(this));
-        bukkitPlugin.getCommand("kickall").setExecutor(new KickAllCommand(this));
-        bukkitPlugin.getCommand("timeout").setExecutor(new TimeoutCommand(this));
-        bukkitPlugin.getCommand("unban").setExecutor(new UnbanCommand(this));
-        bukkitPlugin.getCommand("warn").setExecutor(new WarnCommand(this));
-
+        // Register events
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), bukkitPlugin);
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(this), bukkitPlugin);
     }
 
     private JsonObject getServerConfiguration() {
@@ -246,12 +259,35 @@ public class BukkitPlatform implements Platform {
     }
 
     /**
+     * Gets the manager for the platform.
+     * @return The platform manager.
+     */
+    @Override
+    public BukkitPlatformManager getManager() {
+        return platformManager;
+    }
+
+    @Override
+    public BukkitPlatformValidator getValidator() {
+        return platformValidator;
+    }
+
+    /**
      * Gets the time formatter for the platform.
      *
      * @return The time formatter.
      */
     public TimeFormat getTimeFormatter() {
         return TIMEFORMAT;
+    }
+
+    /**
+     * Gets whether the platform is set up.
+     *
+     * @return Whether the platform is set up.
+     */
+    public boolean isSetup() {
+        return setup;
     }
 
     /**

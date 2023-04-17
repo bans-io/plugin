@@ -1,7 +1,7 @@
 name: Bans
 version: '${version}'
 author: kgm
-main: io.bans.plugin.BansPlugin
+main: io.bans.plugin.BukkitPlugin
 description: A free solution designed to help you track your Minecraft bans, warnings, and other related information.
 website: https://bans.io
 commands:
@@ -13,9 +13,10 @@ commands:
     description: Unbans a player.
   warn:
     description: Warns a player.
-  timeout:
-    description: Timeout/mute a player.
-    aliases: [mute]
+  mute:
+    description: Mutes a player.
+  unmute:
+    description: Unmutes a player.
   kick:
     description: Kicks a player.
   kickall:
