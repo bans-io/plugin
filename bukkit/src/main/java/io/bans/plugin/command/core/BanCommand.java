@@ -34,7 +34,7 @@ public class BanCommand extends BasePlatformCommand {
             PlatformPlayer platformPlayer = platform.getValidator().getPlayer(commandContext.getArguments()[0]);
 
             if (platformPlayer == null) {
-                sender.sendMessage(String.format("%s%s is not a valid player.", ChatColor.RED, commandContext.getArguments()[0]));
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format("&cPlayer %s has yet to play the server.", commandContext.getArguments()[0])));
                 return;
             }
 

@@ -186,8 +186,8 @@ public class BukkitPlatform implements Platform {
         // Configure platform based on online dashboard configuration
         this.platformConfiguration.configure(getServerConfiguration());
 
-        // Send session end request to Bans for players online (if any from a previous session)
-        this.getManager().endSession();
+        // Send a session end request to the backend for any players online from a previous session
+        this.getManager().endSession("Server restart detected");
 
         // Register events
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), bukkitPlugin);
@@ -235,8 +235,8 @@ public class BukkitPlatform implements Platform {
      */
     @Override
     public void stop() {
-        // Send session end request to Bans for players online
-        this.getManager().endSession();
+        // Send a session end request to the backend for any players currently online
+        this.getManager().endSession("Server shutdown detected");
     }
 
     /**

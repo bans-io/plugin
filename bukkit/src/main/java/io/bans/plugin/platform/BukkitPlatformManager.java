@@ -80,15 +80,16 @@ public class BukkitPlatformManager implements PlatformManager {
 
     /**
      * Ends the current server players session.
+     * @param reason the reason for ending the session
      */
     @Override
-    public void endSession() {
+    public void endSession(String reason) {
         String serverToken = bukkitPlatform.getConfiguration().getServerKey();
 
         // Build JSON payload
         JsonObject payload = new JsonObject();
         payload.addProperty("disconnected_at", Instant.now().toString());
-        payload.addProperty("reason", "Plugin ended all running player sessions");
+        payload.addProperty("reason", reason);
 
         // Set up HTTP connection and send request
         try {

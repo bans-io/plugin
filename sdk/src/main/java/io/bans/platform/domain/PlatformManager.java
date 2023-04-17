@@ -19,8 +19,9 @@ public interface PlatformManager {
 
     /**
      * Ends the current server players session.
+     * @param reason the reason for ending the session
      */
-    void endSession();
+    void endSession(String reason);
 
     /**
      * Ends the session for the provided UUID and username.
