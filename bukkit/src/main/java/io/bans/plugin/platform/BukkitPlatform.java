@@ -227,7 +227,8 @@ public class BukkitPlatform implements Platform {
      */
     @Override
     public void stop() {
-
+        // Send session end request to Bans for players online
+        this.getManager().endSession();
     }
 
     /**

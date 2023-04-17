@@ -18,6 +18,11 @@ public class BukkitPlatformManager implements PlatformManager {
     }
 
     @Override
+    public void endSession() {
+
+    }
+
+    @Override
     public void endSession(UUID uuid, String username) {
 
     }

@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 public interface PlatformManager {
 
     void startSession(UUID uuid, String username, String domain);
+    void endSession();
     void endSession(UUID uuid, String username);
     CompletableFuture<Boolean> ban(UUID uuid, String username, String reason, long duration);
     CompletableFuture<Boolean> unban(UUID uuid, String username, String reason);
