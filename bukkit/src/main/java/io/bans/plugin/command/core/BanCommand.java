@@ -52,7 +52,7 @@ public class BanCommand extends BasePlatformCommand {
                     String templateName = args[++i];
 
                     if (platform.getConfiguration().getTemplate("ban", templateName) == null) {
-                        sender.sendMessage(ChatColor.RED + "Template not found.");
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', String.format("&cTemplate %s does not exist.", templateName)));
                         return;
                     }
 

@@ -31,8 +31,6 @@ public class BukkitPlatformValidator implements PlatformValidator {
             HttpURLConnection connection = (HttpURLConnection) new URL(String.format("%s/server/player/%s", bukkitPlatform.getAPI_URL(), uuid.toString())).openConnection();
 
             connection.setRequestMethod("GET");
-
-            connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
 
             if (connection.getResponseCode() == 200) {
@@ -49,7 +47,7 @@ public class BukkitPlatformValidator implements PlatformValidator {
 
                 String jsonString = content.toString();
 
-                bukkitPlatform.log(PlatformLogLevel.INFO, String.format("JSON String: %s", jsonString));
+                bukkitPlatform.log(PlatformLogLevel.INFO, String.format("PlatformPlayer: %s", jsonString));
 
                 return new PlatformPlayer("", uuid.toString(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
             }
@@ -62,6 +60,34 @@ public class BukkitPlatformValidator implements PlatformValidator {
 
     @Override
     public PlatformPlayer getPlayer(String name) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(String.format("%s/minecraft/server/player/%s", bukkitPlatform.getAPI_URL(), name)).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("X-SERVER-TOKEN", bukkitPlatform.getConfiguration().getServerKey());
+
+            if (connection.getResponseCode() == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder content = new StringBuilder();
+                String inputLine;
+
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+
+                in.close();
+                connection.disconnect();
+
+                String jsonString = content.toString();
+
+                bukkitPlatform.log(PlatformLogLevel.INFO, String.format("PlatformPlayer: %s", jsonString));
+
+                return null;
+            }
+        } catch (Exception e) {
+            bukkitPlatform.log(PlatformLogLevel.ERROR, String.format("An error occurred while attempting to retrieve player data for %s", name));
+        }
+
         return null;
     }
 

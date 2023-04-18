@@ -236,7 +236,9 @@ public class BukkitPlatform implements Platform {
     @Override
     public void stop() {
         // Send a session end request to the backend for any players currently online
-        this.getManager().endSession("Server shutdown detected");
+        if (setup && bukkitPlugin.getServer().getOnlinePlayers().size() > 0) {
+            this.getManager().endSession("Server shutdown detected");
+        }
     }
 
     /**
