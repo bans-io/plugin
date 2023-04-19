@@ -111,6 +111,7 @@ public class BukkitPlatformManager implements PlatformManager {
 
         // Build JSON payload
         JsonObject payload = new JsonObject();
+        payload.addProperty("minecraft_uuid", uuid.toString());
         payload.addProperty("disconnected_at", Instant.now().toString());
         payload.addProperty("reason", "Disconnected from the server");
 

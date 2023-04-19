@@ -14,12 +14,14 @@ import io.bans.plugin.configuration.BukkitPlatformConfiguration;
 import io.bans.plugin.event.PlayerJoinListener;
 import io.bans.plugin.event.PlayerQuitListener;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.stream.Collectors;
 
 import static io.bans.platform.utils.ResourceUtil.getBundledFile;
 
@@ -188,6 +190,11 @@ public class BukkitPlatform implements Platform {
 
         // Send a session end request to the backend for any players online from a previous session
         this.getManager().endSession("Server restart detected");
+
+        // Start sessions for all online players on the server
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            this.getManager().startSession(player.getUniqueId(), player.getName(), null);
+        }
 
         // Register events
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(this), bukkitPlugin);
